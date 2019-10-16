@@ -170,6 +170,7 @@ public class FrmMain extends javax.swing.JFrame {
         }
         
         this.cbAtributos.setModel(this.appController.cargarAtributosClase(nombreClase));
+        this.cbMetodos.setModel(this.appController.cargarMetodosClase(nombreClase));
     }//GEN-LAST:event_cbClasesItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

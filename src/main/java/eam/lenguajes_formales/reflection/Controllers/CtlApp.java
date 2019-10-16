@@ -9,6 +9,8 @@ import com.google.common.reflect.ClassPath;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -19,8 +21,8 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class CtlApp {
 
-    public String PACKAGE_PREFIX = "eam.lenguajes_formales.reflection.";
-    public String paquete = "";
+    private final String PACKAGE_PREFIX = "eam.lenguajes_formales.reflection.";
+    private String paquete;
 
     public DefaultComboBoxModel cargarPaquete(String nombrePaquete) {
 
@@ -55,12 +57,50 @@ public class CtlApp {
             return model;
         }
 
-        Field[] atributos = clase.getFields();
+        Field[] atributos = clase.getDeclaredFields();
 
         for (Field atributo : atributos) {
-            System.out.println(atributo.getName());
             model.addElement(atributo.getName());
         }
+        
+        atributos = clase.getFields();
+
+        for (Field atributo : atributos) {
+            model.addElement(atributo.getName());
+        }
+
+        return model;
+    }
+    
+    public DefaultComboBoxModel cargarMetodosClase(String nombreClase) {
+
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        model.addElement("Seleccione Metodos");
+        
+        Set<String> nombresMetodos = new HashSet<>();
+
+        Class clase;
+
+        try {
+            clase = Class.forName(this.PACKAGE_PREFIX + this.paquete + "." + nombreClase);
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(CtlApp.class.getName()).log(Level.SEVERE, null, e);
+            return model;
+        }
+
+        Method[] metodos = clase.getDeclaredMethods();
+
+        for (Method metodo : metodos) {
+            nombresMetodos.add(metodo.getName());
+        }
+        
+        metodos = clase.getMethods();
+
+        for (Method metodo : metodos) {
+            nombresMetodos.add(metodo.getName());
+        }
+        
+        nombresMetodos.forEach((nombreMetodo) -> {model.addElement(nombreMetodo);});
 
         return model;
     }
