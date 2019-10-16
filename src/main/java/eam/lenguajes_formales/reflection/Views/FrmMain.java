@@ -6,6 +6,7 @@
 package eam.lenguajes_formales.reflection.Views;
 
 import eam.lenguajes_formales.reflection.Controllers.CtlApp;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,7 +14,7 @@ import javax.swing.JOptionPane;
  * @author daryl
  */
 public class FrmMain extends javax.swing.JFrame {
-    
+
     private CtlApp appController;
 
     /**
@@ -144,7 +145,7 @@ public class FrmMain extends javax.swing.JFrame {
 
     private void btnCargarPaqueteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPaqueteActionPerformed
         String nombrePaquete = null;
-        
+
         try {
             nombrePaquete = this.txtPaquete.getText().trim();
             if (nombrePaquete == null || nombrePaquete.isEmpty()) {
@@ -153,22 +154,34 @@ public class FrmMain extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Debe ingresar un nombre de paquete");
         }
-        
-        this.cbClases.setModel(this.appController.cargarPaquete(nombrePaquete));
+
+        DefaultComboBoxModel model = this.appController.cargarPaquete(nombrePaquete);
+
+        if (model == null) {
+            model = new DefaultComboBoxModel();
+            model.addElement("Seleccione Clase");
+            this.resetCombosBox();
+            JOptionPane.showMessageDialog(this, "No se ha podido encontrar el paquete que esta buscando.");
+        }
+
+        this.cbClases.setModel(model);
     }//GEN-LAST:event_btnCargarPaqueteActionPerformed
 
     private void cbClasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbClasesItemStateChanged
         String nombreClase = null;
-        
+
         try {
             nombreClase = this.cbClases.getSelectedItem().toString();
             if (nombreClase == null || nombreClase.isEmpty()) {
                 throw new NullPointerException();
+            } else if (this.cbClases.getSelectedIndex() == 0) {
+                this.resetCombosBox();
+                return;
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Debe ingresar un nombre de clase");
         }
-        
+
         this.cbAtributos.setModel(this.appController.cargarAtributosClase(nombreClase));
         this.cbMetodos.setModel(this.appController.cargarMetodosClase(nombreClase));
     }//GEN-LAST:event_cbClasesItemStateChanged
@@ -185,4 +198,16 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txtPaquete;
     // End of variables declaration//GEN-END:variables
+
+    private void resetCombosBox() {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+        model.addElement("Seleccione Atributo");
+        this.cbAtributos.setModel(model);
+
+        model = new DefaultComboBoxModel<>();
+
+        model.addElement("Seleccione Metodo");
+        this.cbMetodos.setModel(model);
+    }
 }

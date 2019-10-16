@@ -33,13 +33,19 @@ public class CtlApp {
 
         try {
             ClassPath classpath = ClassPath.from(Thread.currentThread().getContextClassLoader());
-            classpath.getTopLevelClasses(this.PACKAGE_PREFIX + this.paquete).forEach((info) -> {
+            var clases = classpath.getTopLevelClasses(this.PACKAGE_PREFIX + this.paquete);
+            
+            if (clases.isEmpty()) {
+                return null;
+            }
+            
+            clases.forEach((info) -> {
                 model.addElement(info.getSimpleName());
             });
         } catch (IOException ex) {
             Logger.getLogger(CtlApp.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return model;
     }
 
@@ -62,7 +68,7 @@ public class CtlApp {
         for (Field atributo : atributos) {
             model.addElement(atributo.getName());
         }
-        
+
         atributos = clase.getFields();
 
         for (Field atributo : atributos) {
@@ -71,12 +77,12 @@ public class CtlApp {
 
         return model;
     }
-    
+
     public DefaultComboBoxModel cargarMetodosClase(String nombreClase) {
 
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement("Seleccione Metodo");
-        
+
         Set<String> nombresMetodos = new HashSet<>();
 
         Class clase;
@@ -93,14 +99,16 @@ public class CtlApp {
         for (Method metodo : metodos) {
             nombresMetodos.add(metodo.getName());
         }
-        
+
         metodos = clase.getMethods();
 
         for (Method metodo : metodos) {
             nombresMetodos.add(metodo.getName());
         }
-        
-        nombresMetodos.forEach((nombreMetodo) -> {model.addElement(nombreMetodo);});
+
+        nombresMetodos.forEach((nombreMetodo) -> {
+            model.addElement(nombreMetodo);
+        });
 
         return model;
     }
