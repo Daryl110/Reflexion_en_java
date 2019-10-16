@@ -46,7 +46,7 @@ public class CtlApp {
     public DefaultComboBoxModel cargarAtributosClase(String nombreClase) {
 
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("Seleccione Atributos");
+        model.addElement("Seleccione Atributo");
 
         Class clase;
 
@@ -75,7 +75,7 @@ public class CtlApp {
     public DefaultComboBoxModel cargarMetodosClase(String nombreClase) {
 
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("Seleccione Metodos");
+        model.addElement("Seleccione Metodo");
         
         Set<String> nombresMetodos = new HashSet<>();
 
